@@ -3,7 +3,7 @@
 MAXTIMES=4
 TIMESFOUND=$(/bin/launchctl getenv VPNTIMESUSAGE)
 read pct name thispid< <(top -l 2 -n 1 -F -o cpu -stats cpu,command,pid | tail -1)
-if (( ${pct%.*} >= 50)) && (("$name"=="VPNExtensionX")); then
+if (( ${pct%.*} >= 50)) && [ "$name" = "VPNExtensionX" ]; then
   if [ "$TIMESFOUND" = "" ]; then TIMESFOUND=0; else TIMESFOUND=$((TIMESFOUND+1)); fi
   if (($TIMESFOUND >= $MAXTIMES)); then 
     osascript -e 'display notification "Process > 50%: '"$name"' ('"$pct"'%) (pid: '"$thispid"'), counts: '"$TIMESFOUND"'. Will kill it now. Bye bye." with title "High Usage of CPU"';

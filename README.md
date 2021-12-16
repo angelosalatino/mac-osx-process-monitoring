@@ -15,14 +15,14 @@ Sometimes, for some reasons, I do not realise the CPU usage has gone high. This 
 
 ### New Version
 
-Path ```~/watchvpn_proc```
+Path ```~/watch_vpn_proc```
 ```bash
 #!/usr/bin/env bash
 
 MAXTIMES=4
 TIMESFOUND=$(/bin/launchctl getenv VPNTIMESUSAGE)
 read pct name thispid< <(top -l 2 -n 1 -F -o cpu -stats cpu,command,pid | tail -1)
-if (( ${pct%.*} >= 50)) && (("$name"=="VPNExtensionX")); then
+if (( ${pct%.*} >= 50)) && [ "$name" = "VPNExtensionX" ]; then
   if [ "$TIMESFOUND" = "" ]; then TIMESFOUND=0; else TIMESFOUND=$((TIMESFOUND+1)); fi
   if (($TIMESFOUND >= $MAXTIMES)); then 
     osascript -e 'display notification "Process > 50%: '"$name"' ('"$pct"'%) (pid: '"$thispid"'), counts: '"$TIMESFOUND"'. Will kill it now. Bye bye." with title "High Usage of CPU"';
@@ -39,7 +39,7 @@ fi
 
 ### Old Version
 
-Path ```~/watchvpn_proc```
+Path ```~/watch_vpn_proc```
 ```bash
 #!/usr/bin/env bash
 
@@ -53,7 +53,7 @@ Inspired by [https://stackoverflow.com/questions/24129903/notifying-when-using-h
 
 ## LaunchAgent
 
-Path ```~/Library/LaunchAgents/WatchVPN_proc.plist```
+Path ```~/Library/LaunchAgents/watch.vpn.process.plist```
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -65,7 +65,7 @@ Path ```~/Library/LaunchAgents/WatchVPN_proc.plist```
     <string>WatchVPN_proc</string>
     <key>ProgramArguments</key>
     <array>
-        <string>/Users/aas358/watchvpn_proc</string>
+        <string>/Users/aas358/watch_vpn_proc</string>
     </array>
     <key>RunAtLoad</key>
     <true/>
@@ -79,15 +79,17 @@ Path ```~/Library/LaunchAgents/WatchVPN_proc.plist```
 </plist>
 ```
 
+In the absolute paths ```aas358``` is the username on my machine. Please change it accordingly.
+
 # Commands
 
 **Load the agent**
 
-```launchctl load ~/Library/LaunchAgents/WatchVPN_proc.plist```
+```launchctl load ~/Library/LaunchAgents/watch.vpn.process.plist```
 
 **Unload the agent**
 
-```launchctl unload ~/Library/LaunchAgents/WatchVPN_proc.plist```
+```launchctl unload ~/Library/LaunchAgents/watch.vpn.process.plist```
 
 **Check loaded agents**
 
@@ -103,8 +105,8 @@ Path ```~/Library/LaunchAgents/WatchVPN_proc.plist```
 ## 
 
 ```
-MMM DD HH:MM:SS MACHINE com.apple.xpc.launchd[1] (WatchVPN_proc[6764]): Service could not initialize: 19H1519: xpcproxy + 7195 [252][FB7D36FA-1F35-3A7A-B0FF-B1FAA70E4ED5]: 0x1e
-MMM DD HH:MM:SS MACHINE com.apple.xpc.launchd[1] (WatchVPN_proc[6764]): Service exited with abnormal code: 78
+MMM DD HH:MM:SS MACHINE com.apple.xpc.launchd[1] (watch_vpn_proc[6764]): Service could not initialize: 19H1519: xpcproxy + 7195 [252][FB7D36FA-1F35-3A7A-B0FF-B1FAA70E4ED5]: 0x1e
+MMM DD HH:MM:SS MACHINE com.apple.xpc.launchd[1] (watch_vpn_proc[6764]): Service exited with abnormal code: 78
 ```
 
 I fixed it be putting absolute paths in ```~/Library/LaunchAgents/WatchVPN_proc.plist```
