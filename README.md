@@ -11,6 +11,10 @@ Sometimes, for some reasons, I do not realise the CPU usage has gone high. This 
 
 # Files
 
+To attain this, we need two files ```watch_vpn_proc``` and ```watch.vpn.process.plist```.
+The first one is a bash script that check the active processes and checks whether **VPNExtensionX** is using more than 50% CPU.
+The second file is an agents that routinely runs the bash script.
+
 ## Script
 
 ### New Version
@@ -109,5 +113,5 @@ MMM DD HH:MM:SS MACHINE com.apple.xpc.launchd[1] (watch_vpn_proc[6764]): Service
 MMM DD HH:MM:SS MACHINE com.apple.xpc.launchd[1] (watch_vpn_proc[6764]): Service exited with abnormal code: 78
 ```
 
-I fixed it be putting absolute paths in ```~/Library/LaunchAgents/WatchVPN_proc.plist```
+I fixed it be putting absolute paths in ```~/Library/LaunchAgents/watch.vpn.process.plist```
 Before ```<string>~/watchvpn_proc</string>```, now ```<string>/Users/aas358/watchvpn_proc</string>```
